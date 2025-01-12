@@ -1,0 +1,537 @@
+package com.ozan.azothesabi2
+
+
+import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.ozan.azothesabi2.ui.theme.AzotHesabi2Theme
+import kotlin.math.ceil
+import kotlin.math.floor
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            AzotHesabi2Theme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
+                ) {
+                    Sayfa()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun Sayfa() {
+
+    val context= LocalContext.current
+
+    val tankHacmiLt= remember {
+        mutableStateOf(0)
+    }
+
+    val seviyeSonuc= remember {
+        mutableStateOf("0")
+    }
+
+    val barTup= remember {
+        mutableStateOf(0.0)
+    }
+
+    val seviyeTextField= remember {
+        mutableStateOf("")
+    }
+
+    val tankBasinciTextField= remember {
+        mutableStateOf("")
+    }
+
+
+    val checkboxDurum175m3= remember {
+        mutableStateOf(false)
+    }
+
+    val checkboxDurum3m3= remember {
+        mutableStateOf(false)
+    }
+
+    val checkboxDurum5m3= remember {
+        mutableStateOf(false)
+    }
+
+    val checkboxDurum10m3= remember {
+        mutableStateOf(false)
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+
+                    Column {
+                        Text(text = "Azot Tüpü Adedi Hesabı")
+                        Text(text = "dev. : ozancomru", fontSize = 13.sp)
+                    }
+                },
+                backgroundColor = colorResource(id = R.color.TopBarColor),
+                contentColor = Color.White,
+            )
+
+        },
+        content = {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(colorResource(id = R.color.columnColor)),
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            )
+            {
+
+                Card(   // TANK HACİM CHECKBOX CARD
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .fillMaxWidth()
+                        .size(0.dp, 130.dp),
+                    elevation = 10.dp, backgroundColor = Color.Blue,
+                    shape = RoundedCornerShape(corner = CornerSize(16.dp)),
+                    border = BorderStroke(1.dp, Color.Magenta),
+
+
+                    ) {
+                    Text(
+                        text = "    Tank hacmi seçiniz :",
+                        Modifier.padding(top = 11.dp),
+                        color = Color.White, fontSize = 18.sp,
+                    )
+
+
+
+                    Row(    // TANK HACİM CHECKBOX'LARI
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 25.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.Bottom
+                    )
+                    {   // 1.75M3 COLUMN
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.SpaceBetween
+                        )
+                        {
+
+                            Text(text = "1.75m3", color = Color.White)
+                            Spacer(modifier = Modifier.size(10.dp))
+                            Box(
+                                modifier = Modifier
+                                    .size(19.dp, 19.dp)
+                                    .background(Color.White)
+                                    .border(BorderStroke(1.dp, color = Color.Blue))
+                            )
+                            {
+
+                                Checkbox(
+                                    checked = checkboxDurum175m3.value,
+                                    modifier = Modifier.fillMaxSize(),
+                                    onCheckedChange = {
+
+                                        checkboxDurum175m3.value = it
+                                        checkboxDurum3m3.value = false
+                                        checkboxDurum5m3.value = false
+                                        checkboxDurum10m3.value = false
+                                        tankHacmiLt.value = 1750
+
+
+                                    },
+                                    colors = CheckboxDefaults.colors(checkedColor = Color.Red, checkmarkColor = Color.White)
+                                )
+                            }
+
+
+                        }
+
+                        // 3M3 COLUMN
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "3m3", color = Color.White)
+                            Spacer(modifier = Modifier.size(10.dp))
+                            Box(
+                                modifier = Modifier
+                                    .size(19.dp, 19.dp)
+                                    .background(Color.White)
+                                    .border(BorderStroke(1.dp, color = Color.Blue))
+                            )
+                            {
+
+                                Checkbox(
+                                    checked = checkboxDurum3m3.value,
+                                    onCheckedChange = {
+
+                                        checkboxDurum3m3.value = it
+                                        checkboxDurum175m3.value = false
+                                        checkboxDurum5m3.value = false
+                                        checkboxDurum10m3.value = false
+                                        tankHacmiLt.value = 3000
+
+
+                                    }, colors = CheckboxDefaults.colors(checkedColor = Color.Red, checkmarkColor = Color.White)
+
+                                )
+                            }
+
+
+                        }
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "5m3", color = Color.White)
+                            Spacer(modifier = Modifier.size(10.dp))
+                            Box(
+                                modifier = Modifier
+                                    .size(19.dp, 19.dp)
+                                    .background(Color.White)
+                                    .border(BorderStroke(1.dp, color = Color.Blue))
+                            )
+                            {
+
+                                Checkbox(
+                                    checked = checkboxDurum5m3.value,
+                                    onCheckedChange = {
+                                        checkboxDurum5m3.value = it
+                                        checkboxDurum175m3.value = false
+                                        checkboxDurum3m3.value = false
+                                        checkboxDurum10m3.value = false
+                                        tankHacmiLt.value = 5000
+
+                                    }, colors = CheckboxDefaults.colors(checkedColor = Color.Red, checkmarkColor = Color.White)
+                                )
+                            }
+
+                        }
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "10m3", color = Color.White)
+                            Spacer(modifier = Modifier.size(10.dp))
+                            Box(
+                                modifier = Modifier
+                                    .size(19.dp, 19.dp)
+                                    .background(Color.White)
+                                    .border(BorderStroke(1.dp, color = Color.Blue))
+                            )
+                            {
+                                Checkbox(
+                                    checked = checkboxDurum10m3.value,
+                                    onCheckedChange = {
+                                        checkboxDurum10m3.value = it
+                                        checkboxDurum175m3.value = false
+                                        checkboxDurum5m3.value = false
+                                        checkboxDurum3m3.value = false
+                                        tankHacmiLt.value = 10000
+
+                                    }, colors = CheckboxDefaults.colors(checkedColor = Color.Red, checkmarkColor = Color.White)
+                                )
+
+                            }
+
+                        }
+
+                    }  //  TANK HACİM CHECKBOX'LARI BİTİŞ ...
+
+                }
+
+
+                // TEXTFIELD
+
+                Card(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .fillMaxWidth()
+                        .size(0.dp, 150.dp),
+                    elevation = 10.dp, backgroundColor = Color.Blue,
+                    shape = RoundedCornerShape(corner = CornerSize(16.dp)),
+                    border = BorderStroke(1.dp, Color.Magenta)
+
+                ) {
+
+                    Text(
+                        text = "    Tank seviyesi ve basınç değeri giriniz :",
+                        Modifier.padding(top = 16.dp, bottom = 1.dp),
+                        color = Color.White, fontSize = 18.sp,
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 25.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.Bottom
+                    ) {
+
+
+
+                        OutlinedTextField(     // TANK SEVİYESİ GİRİŞ
+                            value = seviyeTextField.value,
+                            onValueChange = {
+                                seviyeTextField.value = it
+                            },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            modifier = Modifier.size(130.dp, 75.dp), singleLine = true,
+                            label = {
+                                Text(
+                                    text = "Tank Seviyesi?",
+                                    modifier = Modifier.padding(top = 11.dp),
+                                    color = Color.Black
+                                )
+                            },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                backgroundColor = Color.White,
+                                textColor = Color.Black,
+                                focusedBorderColor = Color.Red,
+                                focusedLabelColor = Color.Black,
+
+
+                                )
+
+                        )
+
+
+                        OutlinedTextField(    // TANK BASINCI GİRİŞ
+                            value = tankBasinciTextField.value,
+                            onValueChange = {
+                                tankBasinciTextField.value = it
+                            },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            modifier = Modifier.size(135.dp, 75.dp), singleLine = true,
+                            label = {
+                                Text(
+                                    text = "Tank Basıncı ?",
+                                    modifier = Modifier.padding(top = 11.dp),
+                                    color = Color.Black
+                                )
+                            },
+
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                backgroundColor = Color.White,
+                                textColor = Color.Black,
+                                focusedBorderColor = Color.Red,
+                                focusedLabelColor = Color.Black,
+
+
+                                )
+
+                        )
+                    }
+
+
+                }
+
+                Card(
+                    modifier = Modifier
+                        .padding(5.dp),
+                    elevation = 10.dp, backgroundColor = Color.Blue,
+                    shape = RoundedCornerShape(corner = CornerSize(16.dp)),
+                    border = BorderStroke(1.dp, Color.Magenta)
+
+                ) {
+
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.SpaceEvenly,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+                        Row(
+                            modifier = Modifier  // ADET AZOT TÜPÜ
+                                .fillMaxWidth()
+                                .padding(top = 8.dp, bottom = 3.dp),
+                            //.padding(start = 75.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        )
+                        {
+                            Box(
+                                modifier = Modifier
+                                    .size(160.dp, 50.dp)
+                                    .background(Color.White)
+
+                            ) {
+                                Text(
+                                    text = seviyeSonuc.value + "  adet azot tüpü", color= Color.Black,
+                                    fontSize = 19.sp, modifier = Modifier.align(Alignment.Center),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+
+
+                        }
+
+
+
+                        Row(
+                            modifier = Modifier  // BAR / TUP
+                                .fillMaxWidth()
+                                .padding(bottom = 8.dp),
+                            //.padding(start = 75.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        )
+                        {
+                            Box(
+                                modifier = Modifier
+                                    .size(160.dp, 50.dp)
+                                    .background(Color.White)
+
+                            ) {
+                                Text(
+                                    text = barTup.value.toString() + " Bar/Tup", color = Color.Black,
+                                    fontSize = 19.sp, modifier = Modifier
+                                        .align(Alignment.Center)
+                                        .padding(start = 5.dp),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+
+
+                        }
+
+                    }
+
+
+                }
+
+
+
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(), // BUTON GRUBU
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Button(
+                        onClick = {          // HESAPLA BUTONU
+
+                            if (seviyeTextField.value !== "" || tankBasinciTextField.value !== "") {
+
+
+                                if (checkboxDurum175m3.value == true || checkboxDurum3m3.value == true ||
+                                    checkboxDurum5m3.value == true || checkboxDurum10m3.value == true
+                                ) {
+                                    try {
+                                        val tankSeviyesiAlinanVeri =
+                                            seviyeTextField.value.toDouble() // Tank seviyesi girişten veri alındı ve double değere çevrildi.
+
+                                        val gazFaziHacmi =
+                                            ((100 - tankSeviyesiAlinanVeri)) * tankHacmiLt.value / 100
+
+                                        val barTupIslem = 10000 / gazFaziHacmi
+
+                                        barTup.value =
+                                            (floor(barTupIslem.toDouble() * 100) / 100.toDouble()).toDouble()
+
+                                        val tankBasinciAlinanVeri =
+                                            tankBasinciTextField.value.toInt()
+                                        val deltaP = 15.5 - tankBasinciAlinanVeri.toDouble()
+
+                                        val barTupYukariYuvarla = ceil(deltaP / barTupIslem).toInt()
+
+                                        seviyeSonuc.value = barTupYukariYuvarla.toString()
+
+                                    } catch (e: Exception) {
+                                        Toast.makeText(
+                                            context, "Tam Sayı Giriniz !",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
+
+                                } else {
+                                    Toast.makeText(
+                                        context, "Tank Hacmi Seçimi Yapmadınız !",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+
+                            } else {
+                                Toast.makeText(
+                                    context, "Seviye veya basınç değeri girmediniz !",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+
+                        }, modifier = Modifier.size(115.dp, 60.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color.Blue,
+                            contentColor = Color.White
+
+                        )
+                    ) {
+                        Text(text = "HESAPLA !")
+                    }
+
+                    Button(
+                        onClick = {       // SİL BUTONU
+
+                            seviyeTextField.value = ""
+                            tankBasinciTextField.value = ""
+                            seviyeSonuc.value = 0.toString()
+                            barTup.value = 0.0
+                            checkboxDurum10m3.value = false
+                            checkboxDurum175m3.value = false
+                            checkboxDurum5m3.value = false
+                            checkboxDurum3m3.value = false
+
+                        },
+                        shape = RoundedCornerShape(48), modifier = Modifier.align(Alignment.Bottom)
+
+                    ) {
+                        Text(
+                            text = "SİL",
+                            fontSize = 12.sp,
+                            modifier = Modifier.padding(start = 2.dp)
+                        )
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    )
+
+}
